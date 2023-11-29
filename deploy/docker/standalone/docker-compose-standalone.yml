@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:	
+  topicmanagementservice-db:
+    image: topicmanagementservice-db
+    environment:
+      - ACCEPT_EULA=Y
+    command: /bin/bash /deploy/db-entrypoint.sh
+    networks:
+      - stacktrackNET-network
+    ports:
+      - "1433:1433"
+    secrets:
+      - db_name
+      - db_sa_password
+      - db_user_username
+      - db_user_password
+
+  topicmanagementservice:
+    image: topicmanagementservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    command: /bin/bash /deploy/app-entrypoint.sh
+    networks:
+      - stacktrackNET-network
+    ports:
+      - "5000:80"
+    secrets:
+      - db_server
+      - db_name
+      - db_user_username
+      - db_user_password
+
+networks:
+  stacktrackNET-network:
+    external: true
+
+secrets:
+  db_server:
+    external: true
+  db_name:
+    external: true
+  db_sa_password:
+    external: true
+  db_user_username:
+    external: true
+  db_user_password:
+    external: true

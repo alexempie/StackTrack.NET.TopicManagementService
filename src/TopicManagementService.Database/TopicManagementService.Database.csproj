@@ -1,0 +1,23 @@
+<Project Sdk="MSBuild.Sdk.SqlProj/2.6.1" DefaultTargets="Build">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <SqlServerVersion>Sql160</SqlServerVersion>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
+    </PropertyGroup>
+    <ItemGroup>
+        <Content Remove="Scripts\Post-Deployment\**\*.sql" />
+    	<PostDeploy Include="Scripts\Post-Deployment\**\*.sql" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Condition="'$(NetCoreBuild)' == 'true'">
+            <Version>1.0.0</Version>
+            <PrivateAssets>All</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+    <Target Name="BeforeBuild">
+        <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json" />
+    </Target>
+    <Import Project="$(NETCoreTargetsPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" Condition="'$(NetCoreBuild)' == 'true'" />
+</Project>

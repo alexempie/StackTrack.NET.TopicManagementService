@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:	
+  topicmanagementservice-mono:
+    image: topicmanagementservice-mono
+    environment:
+      - ACCEPT_EULA=Y
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://*:5000
+    command: /bin/bash /deploy/mono-entrypoint.sh
+    networks:
+      - stacktrackNET-network
+    ports:
+      - "5000:5000"
+    secrets:
+      - db_server
+      - db_name
+      - db_sa_password
+      - db_user_username
+      - db_user_password
+
+networks:
+  stacktrackNET-network:
+    external: true
+
+secrets:
+  db_server:
+    external: true
+  db_name:
+    external: true
+  db_sa_password:
+    external: true
+  db_user_username:
+    external: true
+  db_user_password:
+    external: true
